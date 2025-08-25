@@ -284,7 +284,8 @@ class AIPodcastMaker:
         try:
             final_path = FINAL_DIR / f"{newName}.mp3"
             shutil.move(str(compiled_path), str(final_path))
-            print(f"Final podcast saved to: {final_path}")
+            # print(f"Final podcast saved to: {final_path}")
+            return final_path
         except Exception as e:
             print(f"Error while moving final podcast: {e}")
 
@@ -295,24 +296,22 @@ class AIPodcastMaker:
         """
         return "".join(c for c in name if c.isalnum() or c in " _-").strip()
 
+def main():
+    print("Welcome to the AI podcast maker.")
+    topic = input("Enter a topic for your podcast: ")
+    subtopics = input("Enter a subtopic to include (comma separated): ")
+    length = input("How long do you want your podcast (short/medium/long)? ")
 
-def test():
     podcast = AIPodcastMaker()
 
-    script = podcast.generate_script(
-        topic="Why you feel weird when going down in an elevator",
-        length="medium",
-        key_points=[
-            "What the feeling is",
-            "F=ma",
-            "Why F=ma connects to you feeling less heavy"
-        ]
+    podcast.generate_script(
+        topic=topic,
+        length=length,
+        key_points=subtopics.split(",")
     )
-
-    print(script)
-    podcast.create_audio()
+    final_location = podcast.create_audio()
+    print(f"Podcast created! You can view it at: {final_location}")
 
 
 if __name__ == "__main__":
-    if input("run demo? ") == "y":
-        test()
+    main()
