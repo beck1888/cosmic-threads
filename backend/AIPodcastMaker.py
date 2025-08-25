@@ -1,6 +1,7 @@
 # Import used libs
 import os
 import json
+from uuid import uuid4
 from blib.apis.onepw import get_openai_api_key
 from blib.termio.terminal import ColorOut, Spinner
 from openai import OpenAI
@@ -68,6 +69,34 @@ class AIPodcastMaker:
         # TODO: Validate tool calls/ format/ length
         return parsed
     
+    def __speak_text(self, host: str, text: str) -> str:
+        # Get host voices
+        if host.lower() == 'jake':
+            voice_instructions = self.__load_asset('voices/jake_voice_style.txt')
+            use_voice = 'onyx'
+        elif host.lower() == 'luna':
+            voice_instructions = self.__load_asset('voices/luna_voice_style.txt')
+            use_voice = 'nova'
+        else:
+            clr = ColorOut()
+            clr.red(f"Unknown voice '{host}' resolve and try again.")
+
+        # Name the clip
+        file_name = f'tmp/{uuid4()}.mp3'
+
+        # Generate the clip
+        client = OpenAI(api_key=self.openai_api_key)
+        client.audio.speech.create(
+            voice=use_voice,
+            instructions=voice_instructions,
+            model='gpt-4o-mini-tts',
+            input=text,
+            response_format='mp3'
+        ).write_to_file(file_name)
+
+        # Return the file name so we can keep track of it
+        return file_name
+    
     # Script generation
     def generate_script(
             self,
@@ -111,6 +140,9 @@ class AIPodcastMaker:
         # Create the audio holder folder
         os.makedirs("tmp", exist_ok=True)
 
+        # Remember the audio clips to work with
+        clips = []
+
         # Call all the tools
         for tool_call in script:
             tool_name = tool_call["tool_name"]
@@ -120,7 +152,11 @@ class AIPodcastMaker:
                 speaker = params["speaker"]
                 spoken_content = params["text"]
                 print(f"{speaker.capitalize()}: {spoken_content}")
-    
+                clips.append(self.__speak_text(
+                    host=speaker,
+                    text=spoken_content
+                ))
+
 def test():
     podcast = AIPodcastMaker()
 
