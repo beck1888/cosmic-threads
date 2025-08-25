@@ -74,10 +74,8 @@ class AIPodcastMaker:
     def __speak_text(self, host: str, text: str) -> str:
         # Get host voices
         if host.lower() == 'jake':
-            voice_instructions = self.__load_asset('voices/jake_voice_style.txt')
             use_voice = 'onyx'
         elif host.lower() == 'luna':
-            voice_instructions = self.__load_asset('voices/luna_voice_style.txt')
             use_voice = 'nova'
         else:
             clr = ColorOut()
@@ -90,7 +88,6 @@ class AIPodcastMaker:
         client = OpenAI(api_key=self.openai_api_key)
         client.audio.speech.create(
             voice=use_voice,
-            instructions=voice_instructions,
             model='gpt-4o-mini-tts',
             input=text,
             response_format='mp3',
