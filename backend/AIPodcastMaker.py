@@ -1,4 +1,5 @@
 # Import used libs
+import os
 import json
 from blib.apis.onepw import get_openai_api_key
 from blib.termio.terminal import ColorOut, Spinner
@@ -89,10 +90,36 @@ class AIPodcastMaker:
             script = self.__get_api_response(system_prompt=system_prompt, user_message=user_prompt, model='gpt-4o-mini', temp=0.2)
 
         # Validate prompt and save to class instance
-        self.json_serialized_script: list[dict[str, dict[str, str] | str]] = self.__validate_script(script)
+        validated_script = self.__validate_script(script)
+        
+        if validated_script is False:
+            clr = ColorOut()
+            clr.red("Script parsing error. Script failed to parse (fatal).")
+            exit(1)
+        else:
+            # Script is okay to proceed
+            self.json_serialized_script: list[dict[str, dict[str, str] | str]] = validated_script
 
         # Return just in case
         return script
+    
+    # Process the script into audio chunks (run each tool)
+    def compile_script(self):
+        # Bring in the script
+        script = self.json_serialized_script
+
+        # Create the audio holder folder
+        os.makedirs("tmp", exist_ok=True)
+
+        # Call all the tools
+        for tool_call in script:
+            tool_name = tool_call["tool_name"]
+            params = tool_call["tool_params"]
+
+            if tool_name == "speak":
+                speaker = params["speaker"]
+                spoken_content = params["text"]
+                print(f"{speaker.capitalize()}: {spoken_content}")
     
 def test():
     podcast = AIPodcastMaker()
@@ -108,6 +135,7 @@ def test():
     )
 
     print(script)
+    podcast.compile_script()
 
 if __name__ == '__main__':
     if input('run demo? ') == 'y':
