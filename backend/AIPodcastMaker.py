@@ -93,7 +93,7 @@ class AIPodcastMaker:
             model='gpt-4o-mini-tts',
             input=text,
             response_format='mp3',
-            speed=1.05 # Go less slowly, but not oddly fast
+            # speed=1.05 # Go less slowly, but not oddly fast
         ).write_to_file(file_name)
 
         # Return the file name so we can keep track of it
@@ -148,7 +148,7 @@ class AIPodcastMaker:
         os.makedirs("tmp", exist_ok=True)
 
         # Remember the audio clips to work with
-        clips = []
+        clips = ['backend/assets/sounds/intro.mp3']
 
         # Debug info
         total_tool_calls = str(len(script))
@@ -171,6 +171,9 @@ class AIPodcastMaker:
                         text=spoken_content
                     ))
 
+        # Add the outro
+        clips.append('backend/assets/sounds/outro.mp3')
+
         # Assemble all the clips
         audio = CompiledAudioDriver()
         for clip in clips:
@@ -184,12 +187,14 @@ def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
-        topic="What computer to buy for college",
-        length='very short',
+        topic="Is a Crosstrek a good first car?",
+        length='medium',
         key_points=[
-            "Mac vs PC",
-            "Size considerations",
-            "New v.s. Used"
+            "Why consider the Crosstrek",
+            "Safety",
+            "Learning curve",
+            "Overall fit",
+            "Possible alternatives"
         ]
     )
 
