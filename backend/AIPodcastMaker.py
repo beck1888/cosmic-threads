@@ -106,13 +106,18 @@ class AIPodcastMaker:
     ) -> str:
         # Load prompts
         system_prompt = self.__load_asset('scripts/ai_script_gen_prompt.md', {"LEN_DEF_WORD_ENGLISH": length.lower()})
-        user_prompt = self.__load_asset('scripts/user_prompt.md', {"PODCAST_TOPIC": topic})
+        user_prompt = self.__load_asset('scripts/user_prompt.md', {"PODCAST_TOPIC": topic, "LEN_DEF_WORD_ENGLISH": length.lower()})
 
         # Tack on user special key points
         if len(key_points) > 0:
             user_prompt += "\nMake sure to cover all these key points in the podcast:"
+            i = 0
             for point in key_points:
-                user_prompt = user_prompt + f"\n- {point}"
+                i += 1
+                user_prompt = user_prompt + f"\n{i}. {point}"
+
+        # Debug
+        print(system_prompt); print(user_prompt); exit(0)
 
         # Generate prompt
         with Spinner("Generating podcast"):
@@ -143,8 +148,14 @@ class AIPodcastMaker:
         # Remember the audio clips to work with
         clips = []
 
+        # Debug info
+        total_tool_calls = str(len(script))
+        print(f"Found {total_tool_calls} tool calls.")
+        i = 0
+
         # Call all the tools
         for tool_call in script:
+            i += 1
             tool_name = tool_call["tool_name"]
             params = tool_call["tool_params"]
 
@@ -152,17 +163,18 @@ class AIPodcastMaker:
                 speaker = params["speaker"]
                 spoken_content = params["text"]
                 print(f"{speaker.capitalize()}: {spoken_content}")
-                clips.append(self.__speak_text(
-                    host=speaker,
-                    text=spoken_content
-                ))
+                with Spinner(f"Calling tool ({str(i)}/{total_tool_calls})"):
+                    clips.append(self.__speak_text(
+                        host=speaker,
+                        text=spoken_content
+                    ))
 
 def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
         topic="What computer to buy for college",
-        length='very long',
+        length='very short',
         key_points=[
             "Mac vs PC",
             "Size considerations",
