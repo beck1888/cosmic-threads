@@ -149,6 +149,7 @@ class AIPodcastMaker:
 
         # Remember the audio clips to work with
         clips = ['backend/assets/sounds/intro.mp3']
+        clips_written_to_disk = []
 
         # Debug info
         total_tool_calls = str(len(script))
@@ -183,12 +184,16 @@ class AIPodcastMaker:
         audio.save_compiled_audio(compiled_clips)
         print(compiled_clips)
 
+        # Clean up temp clips
+        for clip in clips:
+            os.remove(clip)
+
 def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
         topic="Ways that MacBooks are better then Windows PCs",
-        length='very long',
+        length='very short',
         key_points=[
             "Design and consistency",
             "Power usage",
