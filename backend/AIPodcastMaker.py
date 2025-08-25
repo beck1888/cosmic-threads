@@ -4,6 +4,7 @@ import json
 from uuid import uuid4
 from blib.apis.onepw import get_openai_api_key
 from blib.termio.terminal import ColorOut, Spinner
+from blib.audio.compiled_audio_driver import CompiledAudioDriver
 from openai import OpenAI
 
 # Debug
@@ -91,7 +92,8 @@ class AIPodcastMaker:
             instructions=voice_instructions,
             model='gpt-4o-mini-tts',
             input=text,
-            response_format='mp3'
+            response_format='mp3',
+            speed=1.05 # Go less slowly, but not oddly fast
         ).write_to_file(file_name)
 
         # Return the file name so we can keep track of it
@@ -116,8 +118,8 @@ class AIPodcastMaker:
                 i += 1
                 user_prompt = user_prompt + f"\n{i}. {point}"
 
-        # Debug
-        print(system_prompt); print(user_prompt); exit(0)
+        # Debug only
+        # print(system_prompt); print(user_prompt); exit(0)
 
         # Generate prompt
         with Spinner("Generating podcast"):
@@ -138,7 +140,7 @@ class AIPodcastMaker:
         return script
     
     # Process the script into audio chunks (run each tool)
-    def compile_script(self):
+    def create_audio(self):
         # Bring in the script
         script = self.json_serialized_script
 
@@ -169,6 +171,15 @@ class AIPodcastMaker:
                         text=spoken_content
                     ))
 
+        # Assemble all the clips
+        audio = CompiledAudioDriver()
+        for clip in clips:
+            audio.add_clip(clip)
+        audio.compile()
+        compiled_clips = f'tmp/{uuid4()}.mp3'
+        audio.save_compiled_audio(compiled_clips)
+        print(compiled_clips)
+
 def test():
     podcast = AIPodcastMaker()
 
@@ -183,7 +194,7 @@ def test():
     )
 
     print(script)
-    podcast.compile_script()
+    podcast.create_audio()
 
 if __name__ == '__main__':
     if input('run demo? ') == 'y':

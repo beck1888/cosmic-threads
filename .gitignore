@@ -3,3 +3,5 @@ backend/blib/
 .DS_Store
 .venv/
 .vscode/
+
+tmp/
