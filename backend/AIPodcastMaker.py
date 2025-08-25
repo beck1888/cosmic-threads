@@ -1,4 +1,5 @@
 # Import used libs
+import json
 from blib.apis.onepw import get_openai_api_key
 from blib.termio.terminal import ColorOut, Spinner
 from openai import OpenAI
@@ -56,6 +57,16 @@ class AIPodcastMaker:
         )
         return reply.choices[0].message.content
     
+    def __validate_script(self, script_to_validate) -> list[dict[str, dict[str, str] | str]]:
+        try:
+            parsed = json.loads(script_to_validate)
+            clr = ColorOut(); clr.green("Json format is okay")
+        except SyntaxError as e:
+            return False
+        
+        # TODO: Validate tool calls/ format/ length
+        return parsed
+    
     # Script generation
     def generate_script(
             self,
@@ -73,12 +84,14 @@ class AIPodcastMaker:
             for point in key_points:
                 user_prompt = user_prompt + f"\n- {point}"
 
-        # Validate length
-
         # Generate prompt
         with Spinner("Generating podcast"):
             script = self.__get_api_response(system_prompt=system_prompt, user_message=user_prompt, model='gpt-4o-mini', temp=0.2)
 
+        # Validate prompt and save to class instance
+        self.json_serialized_script: list[dict[str, dict[str, str] | str]] = self.__validate_script(script)
+
+        # Return just in case
         return script
     
 def test():
