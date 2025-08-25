@@ -124,8 +124,8 @@ Always output in the following JSON structure:
 
 | Length description | Approx number of turns  | Overall level of detail |
 |--------------------|-------------------------|--------------------------|
-| Short              | About 8 per host        | Fair                     |
-| Medium             | About 16 per host       | High                     |
-| Long               | About 30 per host       | Very High                |
+| Short              | About 15 per host       | Fair                     |
+| Medium             | About 30 per host       | High                     |
+| Long               | About 50 per host       | Very In-Depth            |
 
 // Please note that one turn is equal to one exchange between Jake and Luna (2 speech tool calls)
