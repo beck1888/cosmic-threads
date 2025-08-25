@@ -243,7 +243,11 @@ class AIPodcastMaker:
         # Assemble all clips
         audio = CompiledAudioDriver()
         for clip in clips:
-            audio.add_clip(clip)
+            try:
+                audio.add_clip(clip)
+            except FileNotFoundError:
+                print(f"Error: the clip `{clip}` could not be found, so despite requesting, it's been omitted.")
+                pass
         audio.compile()
 
         compiled_path = TMP_DIR / f"{uuid4()}.mp3"
