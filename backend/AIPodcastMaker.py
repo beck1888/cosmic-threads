@@ -218,6 +218,7 @@ class AIPodcastMaker:
             tool_name = tool_call.get("tool_name")  # type: ignore[assignment]
             params = tool_call.get("tool_params", {})  # type: ignore[assignment]
 
+            # Speak tool
             if tool_name == "speak":
                 speaker = params.get("speaker", "")
                 spoken_content = params.get("text", "")
@@ -229,6 +230,12 @@ class AIPodcastMaker:
                     )
                     clips.append(temp_clip)
                     temp_clips.append(temp_clip)
+            # Sound effect tool
+            elif tool_name == "sfx":
+                sfx = params.get("sound", "")
+                if not sfx == "":
+                    print(f"Adding SFX: {sfx}")
+                    clips.append(f'backend/assets/sound/sfx/{sfx}.mp3')
 
         # Add outro
         clips.append(str(OUTRO_SOUND))
@@ -289,13 +296,13 @@ def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
-        topic="Ways that MacBooks are better then Windows PCs",
-        length="very short",
+        topic="Why Europe's rail network is so good",
+        length="medium",
         key_points=[
-            "Design and consistency",
-            "Power usage",
-            "macOS benefits",
-            "Software support",
+            "Historical Factors",
+            "Why it's so good",
+            "Compared to America",
+            "Compared to Japan",
             "Drawbacks",
         ],
     )
