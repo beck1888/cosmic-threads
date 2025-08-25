@@ -1,4 +1,5 @@
 # Import used libs
+import shutil
 import os
 import json
 from uuid import uuid4
@@ -106,6 +107,9 @@ class AIPodcastMaker:
             length: str,
             key_points: list[str] = []
     ) -> str:
+        # Save info to class
+        self.__go_prompt = topic + "Focus on: " + "".join(key_points)
+
         # Load prompts
         system_prompt = self.__load_asset('scripts/ai_script_gen_prompt.md', {"LEN_DEF_WORD_ENGLISH": length.lower()})
         user_prompt = self.__load_asset('scripts/user_prompt.md', {"PODCAST_TOPIC": topic, "LEN_DEF_WORD_ENGLISH": length.lower()})
@@ -138,18 +142,19 @@ class AIPodcastMaker:
 
         # Return just in case
         return script
-    
+
     # Process the script into audio chunks (run each tool)
     def create_audio(self):
         # Bring in the script
         script = self.json_serialized_script
 
-        # Create the audio holder folder
+        # Create the audio holder folder(s)
         os.makedirs("tmp", exist_ok=True)
+        os.makedirs("final podcasts", exist_ok=True)
 
         # Remember the audio clips to work with
         clips = ['backend/assets/sounds/intro.mp3']
-        clips_written_to_disk = []
+        temp_clips = []  # Track only temporary clips written to disk
 
         # Debug info
         total_tool_calls = str(len(script))
@@ -167,10 +172,12 @@ class AIPodcastMaker:
                 spoken_content = params["text"]
                 print(f"{speaker.capitalize()}: {spoken_content}")
                 with Spinner(f"Calling tool ({str(i)}/{total_tool_calls})"):
-                    clips.append(self.__speak_text(
+                    temp_clip = self.__speak_text(
                         host=speaker,
                         text=spoken_content
-                    ))
+                    )
+                    clips.append(temp_clip)
+                    temp_clips.append(temp_clip)  # Track temp files
 
         # Add the outro
         clips.append('backend/assets/sounds/outro.mp3')
@@ -182,11 +189,35 @@ class AIPodcastMaker:
         audio.compile()
         compiled_clips = f'tmp/{uuid4()}.mp3'
         audio.save_compiled_audio(compiled_clips)
-        print(compiled_clips)
+        print(f"Compiled audio saved to: {compiled_clips}")
 
         # Clean up temp clips
-        for clip in clips:
-            os.remove(clip)
+        for clip in temp_clips:
+            try:
+                os.remove(clip)
+            except FileNotFoundError:
+                print(f"Warning: Temporary file {clip} not found for cleanup.")
+            except Exception as e:
+                print(f"Error while deleting temporary file {clip}: {e}")
+
+        # Generate new podcast name
+        with Spinner('Renaming file'):
+            newName = self.__get_api_response(
+                system_prompt="You are an expert in concise file renaming. Based on this script idea, come up with a 3 word name for the final podcast title. Output only the final podcast title, no other characters, no file extensions. Use 3 short words max. You will now read the podcast's inspiration prompt.",
+                user_message=self.__go_prompt,
+                model='gpt-4o'
+            )
+
+        # Sanitize the new name (remove invalid characters for file names)
+        newName = "".join(c for c in newName if c.isalnum() or c in " _-").strip()
+
+        # Move final podcast to its own folder
+        try:
+            final_path = f'final podcasts/{newName}.mp3'
+            shutil.move(compiled_clips, final_path)
+            print(f"Final podcast saved to: {final_path}")
+        except Exception as e:
+            print(f"Error while moving final podcast: {e}")
 
 def test():
     podcast = AIPodcastMaker()
