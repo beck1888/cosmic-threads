@@ -1,6 +1,6 @@
 # Import used libs
 from blib.apis.onepw import get_openai_api_key
-from blib.termio.terminal import ColorOut
+from blib.termio.terminal import ColorOut, Spinner
 from openai import OpenAI
 
 # Debug
@@ -60,9 +60,10 @@ class AIPodcastMaker:
     def generate_script(
             self,
             topic: str,
-            length: str, # short, medium, long
+            length: str,
             key_points: list[str] = []
     ) -> str:
+        # Load prompts
         system_prompt = self.__load_asset('scripts/ai_script_gen_prompt.md', {"LEN_DEF_WORD_ENGLISH": length.lower()})
         user_prompt = self.__load_asset('scripts/user_prompt.md', {"PODCAST_TOPIC": topic})
 
@@ -72,14 +73,29 @@ class AIPodcastMaker:
             for point in key_points:
                 user_prompt = user_prompt + f"\n- {point}"
 
-        return user_prompt
-    
-# Test/ demo
-# p = AIPodcastMaker("dummy string")
+        # Validate length
 
-# o = p.generate_script(
-#     topic="Hydroelectric Dams",
-#     length="Very Long",
-#     key_points=["Structural integrity", "Locations", "Cost"]
-# )
-# print(o)
+        # Generate prompt
+        with Spinner("Generating podcast"):
+            script = self.__get_api_response(system_prompt=system_prompt, user_message=user_prompt, model='gpt-4o-mini', temp=0.2)
+
+        return script
+    
+def test():
+    podcast = AIPodcastMaker()
+
+    script = podcast.generate_script(
+        topic="What computer to buy for college",
+        length='very long',
+        key_points=[
+            "Mac vs PC",
+            "Size considerations",
+            "New v.s. Used"
+        ]
+    )
+
+    print(script)
+
+if __name__ == '__main__':
+    if input('run demo? ') == 'y':
+        test()

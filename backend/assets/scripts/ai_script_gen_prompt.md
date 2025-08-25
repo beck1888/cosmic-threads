@@ -112,7 +112,7 @@ Always output in the following JSON structure:
 
 ### Rules & Requirements  
 
-1. **Output only JSON** — no explanations, no extra text.  
+1. **Output only JSON** — no explanations, no markdown delimiters, no extra text.  
 2. **Jake always speaks first.**  
 3. Both Jake and Luna must introduce themselves before the main discussion.
 4. Jake and Luna should alternate turns every 3-5 sentences.
@@ -120,4 +120,12 @@ Always output in the following JSON structure:
 6. Dialogue must feel **natural, conversational, and engaging**.  
 7. Cover all provided key points while staying within the target word count.  
 8. In `speak` tool text, include **only the exact spoken words** (no stage directions).  
-9. The total length of just the spoken text should equate to a ${{LEN_DEF_WORD_ENGLISH}} podcast.
+9. The total length of just the spoken text should equate to a ${{LEN_DEF_WORD_ENGLISH}} podcast. Please refer to this table for what that means.
+
+| Length description | Approx number of turns  | Overall level of detail |
+|--------------------|-------------------------|--------------------------|
+| Short              | About 8 per host        | Fair                     |
+| Medium             | About 16 per host       | High                     |
+| Long               | About 30 per host       | Very High                |
+
+// Please note that one turn is equal to one exchange between Jake and Luna (2 speech tool calls)
