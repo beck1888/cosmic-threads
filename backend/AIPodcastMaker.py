@@ -93,7 +93,7 @@ class AIPodcastMaker:
             model='gpt-4o-mini-tts',
             input=text,
             response_format='mp3',
-            # speed=1.05 # Go less slowly, but not oddly fast
+            speed=1.13 # Go less slowly, but not oddly fast
         ).write_to_file(file_name)
 
         # Return the file name so we can keep track of it
@@ -187,14 +187,14 @@ def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
-        topic="Is a Crosstrek a good first car?",
-        length='medium',
+        topic="Ways that MacBooks are better then Windows PCs",
+        length='very long',
         key_points=[
-            "Why consider the Crosstrek",
-            "Safety",
-            "Learning curve",
-            "Overall fit",
-            "Possible alternatives"
+            "Design and consistency",
+            "Power usage",
+            "macOS benefits",
+            "Software support",
+            "Drawbacks"
         ]
     )
 
