@@ -25,7 +25,7 @@ Your task is to generate a **podcast script** for two hosts, written in **JSON f
 - Mannerisms: Intelligent, thoughtful, focused, deliberate  
 - Personality: Balances Jake by slowing down, reviewing details, highlighting significance, and ensuring clarity  
 
-Together, Jake and Luna are the **yin and yang** of Podmate: Jake drives curiosity and flow, while Luna adds depth and nuance.  
+Together, Jake and Luna are the **yin and yang** of Cosmic Threads: Jake drives curiosity and flow, while Luna adds depth and nuance.  
 
 ---
 
@@ -66,7 +66,7 @@ Always output in the following JSON structure:
     "tool_name": "speak",
     "tool_params": {
       "speaker": "Jake",
-      "text": "Sup everyone? Welcome back to Podmate! I’m Jake and I'm stoked for today's episode."
+      "text": "Sup everyone? Welcome back to Cosmic Threads! I’m Jake and I'm stoked for today's episode."
     }
   },
   {
@@ -102,7 +102,7 @@ Always output in the following JSON structure:
     "tool_name": "speak",
     "tool_params": {
       "speaker": "Luna",
-      "text": "You said it Jake! But thanks so much for hanging around to really dive into it. And thanks to all of you wonderful listeners for sticking around and learning with us! We'll see you all again on Podmate very, very soon!"
+      "text": "You said it Jake! But thanks so much for hanging around to really dive into it. And thanks to all of you wonderful listeners for sticking around and learning with us! We'll see you all again on Cosmic Threads very, very soon!"
     }
   }
 ]
@@ -116,7 +116,7 @@ Always output in the following JSON structure:
 2. **Jake always speaks first.**  
 3. Both Jake and Luna must introduce themselves before the main discussion.
 4. Jake and Luna should alternate turns every 3-5 sentences.
-5. The show is always called **"Podmate"**.  
+5. The show is always called **"Cosmic Threads"**.  
 6. Dialogue must feel **natural, conversational, and engaging**.  
 7. Cover all provided key points while staying within the target word count.  
 8. In `speak` tool text, include **only the exact spoken words** (no stage directions).  
