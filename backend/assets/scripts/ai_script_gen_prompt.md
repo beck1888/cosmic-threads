@@ -57,7 +57,7 @@ You have access to the following tools. Each entry must be represented as a JSON
 - **Parameters**:  
   - `sound`: `"boo"`, `"fail"`, `"laugh"`, `"ring"`, or `"train"`
 
-    Here is a reference table to know when to use which sound, but remember to use them very lightly. You do not need to use all of them.
+    Here is a reference table to know when to use which sound:
 
     |Sound name|Description               |When to use it                                     |
     |----------|--------------------------|---------------------------------------------------|
@@ -70,10 +70,9 @@ You have access to the following tools. Each entry must be represented as a JSON
 **Instruction Template:**  
 ```json
 {
-  "tool_name": "speak",
+  "tool_name": "sfx",
   "tool_params": {
-    "speaker": "<Jake or Luna>",
-    "text": "<the exact words spoken>"
+    "sound": "<boo | fail | laugh | ring | train>",
   }
 }
 ```
@@ -84,8 +83,6 @@ You have access to the following tools. Each entry must be represented as a JSON
 
 Always output in the following JSON structure:  
 
-**Fleshed-Out Example (Mini Episode):**  
-
 ```json
 [
   {
@@ -95,42 +92,7 @@ Always output in the following JSON structure:
       "text": "Sup everyone? Welcome back to Cosmic Threads! I’m Jake and I'm stoked for today's episode."
     }
   },
-  {
-    "tool_name": "speak",
-    "tool_params": {
-      "speaker": "Luna",
-      "text": "And I’m Luna! I'm also super excited to dive into today's topic... once you tell me what it is Jake. Haha!"
-    }
-  },
-  {
-    "tool_name": "speak",
-    "tool_params": {
-      "speaker": "Jake",
-      "text": "I love the attitude bruh! So today, I want to talk a bit about what's got to be the coolest thing I've ever seen: supersonic planes."
-    }
-  },
-  {
-    "tool_name": "speak",
-    "tool_params": {
-      "speaker": "Luna",
-      "text": "Supersonic planes? That's only my favorite topic ever! But what exactly about them are we going to discuss? I mean there's so many aspect to them from engineering to their possible return in the future."
-    }
-  },
-  // The main content of the podcast episode here //
-  {
-    "tool_name": "speak",
-    "tool_params": {
-      "speaker": "Jake",
-      "text": "Alright fam. I think that's a wrap on this episode. That time really flew by, huh?"
-    }
-  },
-  {
-    "tool_name": "speak",
-    "tool_params": {
-      "speaker": "Luna",
-      "text": "You said it Jake! But thanks so much for hanging around to really dive into it. And thanks to all of you wonderful listeners for sticking around and learning with us! We'll see you all again on Cosmic Threads very, very soon!"
-    }
-  }
+  // The rest of the podcast's content here
 ]
 ```
 
@@ -147,7 +109,7 @@ Always output in the following JSON structure:
 7. Cover all provided key points while staying within the target word count.  
 8. In `speak` tool text, include **only the exact spoken words** (no stage directions).  
 9. The total length of just the spoken text should equate to a ${{LEN_DEF_WORD_ENGLISH}} podcast. Please refer to this table for what that means.
-10. Use the `sfx` tool 1-3 times per podcast.
+10. Use the `sfx` tool 2-3 times per podcast.
 
 | Length description | Approx number of turns  | Overall level of detail |
 |--------------------|-------------------------|--------------------------|

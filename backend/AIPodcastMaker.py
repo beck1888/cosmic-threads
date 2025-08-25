@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 from uuid import uuid4
 
 from blib.apis.onepw import get_openai_api_key
@@ -235,7 +235,7 @@ class AIPodcastMaker:
                 sfx = params.get("sound", "")
                 if not sfx == "":
                     print(f"Adding SFX: {sfx}")
-                    clips.append(f'backend/assets/sound/sfx/{sfx}.mp3')
+                    clips.append(f'backend/assets/sounds/sfx/{sfx}.mp3')
 
         # Add outro
         clips.append(str(OUTRO_SOUND))
@@ -296,15 +296,13 @@ def test():
     podcast = AIPodcastMaker()
 
     script = podcast.generate_script(
-        topic="Why Europe's rail network is so good",
+        topic="Why you feel weird when going down in an elevator",
         length="medium",
         key_points=[
-            "Historical Factors",
-            "Why it's so good",
-            "Compared to America",
-            "Compared to Japan",
-            "Drawbacks",
-        ],
+            "What the feeling is",
+            "F=ma",
+            "Why F=ma connects to you feeling less heavy"
+        ]
     )
 
     print(script)
