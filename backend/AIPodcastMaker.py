@@ -24,8 +24,8 @@ OUTRO_SOUND = SOUNDS_DIR / "outro.mp3"
 
 # Host to voice mapping for TTS
 VOICE_BY_HOST = {
-    "jake": "onyx",
-    "luna": "nova",
+    "jake": "alloy",
+    "luna": "ash",
 }
 
 DEFAULT_TTS_VOICE = "onyx"
