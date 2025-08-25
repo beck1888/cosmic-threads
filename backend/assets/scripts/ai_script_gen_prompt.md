@@ -51,28 +51,37 @@ You have access to the following tools. Each entry must be represented as a JSON
   }
 }
 ```
-
 #### 2. `sfx`  
-- **Purpose**: Play a short sound effect between speech. You should use this tool sparingly and only when relevant to enhance engagement.
+- **Purpose**: Play a short sound effect between speech. You should use this tool sparingly and only when relevant to enhance engagement.  
 - **Parameters**:  
-  - `sound`: `"boo"`, `"fail"`, `"laugh"`, `"ring"`, or `"train"`
+  - `sound`: `"boo"`, `"fail"`, `"laugh"`, `"ring"`, `"train"`, `"bark"`, `"cheer"`, `"correct_ding"`, `"drumroll"`, `"gasp"`, `"meow"`, `"record"`, `"rimshot"`, `"swoosh"`, or `"wrong_buzzer"`
 
     Here is a reference table to know when to use which sound:
 
-    |Sound name|Description               |When to use it                                     |
-    |----------|--------------------------|---------------------------------------------------|
-    |boo       |A crowd booing            |Something that's strongly disliked                 |
-    |fail      |A "fail" trumpet          |When something goes poorly                         |
-    |laugh     |A sitcom crowd laughing   |When something funny happens                       |
-    |ring      |An old phone ringing      |When pretending to consult outside info            |
-    |train     |An train horn             |When joking about something arriving or coming soon|
+    |Sound name   |Description                  |When to use it                                           |
+    |-------------|-----------------------------|---------------------------------------------------------|
+    |boo          |A crowd booing               |Something that's strongly disliked                       |
+    |fail         |A "fail" trumpet             |When something goes poorly                               |
+    |laugh        |A sitcom crowd laughing      |When something funny happens                             |
+    |ring         |An old phone ringing         |When pretending to consult outside info                  |
+    |train        |A train horn                 |When joking about something arriving or coming soon      |
+    |bark         |A dog barking                |When referencing dogs or something surprising            |
+    |cheer        |A crowd cheering             |When celebrating success or good news                    |
+    |correct_ding |A correct answer ding        |When confirming something is right                       |
+    |drumroll     |A drumroll                   |When building suspense before a reveal                   |
+    |gasp         |A crowd gasp                 |When something shocking or unexpected happens            |
+    |meow         |A cat meowing                |When referencing cats or something playful               |
+    |record       |A record scratch             |When abruptly changing topic or stopping something       |
+    |rimshot      |A rimshot (ba-dum-tss)       |When delivering a punchline or corny joke                |
+    |swoosh       |A swoosh sound               |When something moves quickly or transitions dramatically |
+    |wrong_buzzer |A wrong answer buzzer        |When something is incorrect or rejected                  |
 
 **Instruction Template:**  
 ```json
 {
   "tool_name": "sfx",
   "tool_params": {
-    "sound": "<boo | fail | laugh | ring | train>",
+    "sound": "<boo | fail | laugh | ring | train | bark | cheer | correct_ding | drumroll | gasp | meow | record | rimshot | swoosh | wrong_buzzer>"
   }
 }
 ```
